@@ -1,1 +1,0 @@
-/usr/bin/c++  -pthread -Wall CMakeFiles/test.dir/gtest.cpp.o CMakeFiles/test.dir/src/basic.cpp.o CMakeFiles/test.dir/src/callable.cpp.o -o test  -lgtest -lpthread 
