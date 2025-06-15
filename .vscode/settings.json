@@ -60,6 +60,7 @@
         "set": "cpp",
         "iomanip": "cpp",
         "iostream": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "*.h1": "cpp"
     }
 }

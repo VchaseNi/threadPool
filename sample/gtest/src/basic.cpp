@@ -1,4 +1,3 @@
-#include "callable.h"
 #include "syncLogger.h"
 #include "threadPool.h"
 #include <algorithm>
@@ -33,27 +32,27 @@ TEST(basic, wait)
     Logger::println("All tasks completed in ", duration.count(), " ms.");
 }
 
-/// @brief 测试wait_for函数
-TEST(basic, wait_for)
+/// @brief 测试waitFor函数
+TEST(basic, waitFor)
 {
     ThreadPool pool(4);
     for (int i = 0; i < 10; ++i) {
         pool.detach(longTask, i);
     }
 
-    bool result = pool.wait_for(std::chrono::milliseconds(500));
+    bool result = pool.waitFor(std::chrono::milliseconds(500));
     ASSERT_FALSE(result);
     ASSERT_EQ(pool.waitedCnt(), 6);
     ASSERT_EQ(pool.runningCnt(), 4);
 
-    result = pool.wait_for(std::chrono::milliseconds(3010));
+    result = pool.waitFor(std::chrono::milliseconds(3010));
     ASSERT_TRUE(result);
     ASSERT_EQ(pool.waitedCnt(), 0);
     ASSERT_EQ(pool.runningCnt(), 0);
 }
 
-/// @brief 测试wait_until函数
-TEST(basic, wait_until)
+/// @brief 测试waitUntil函数
+TEST(basic, waitUntil)
 {
     ThreadPool pool(4);
     for (int i = 0; i < 10; ++i) {
@@ -61,14 +60,14 @@ TEST(basic, wait_until)
     }
 
     auto timePoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
-    ASSERT_FALSE(pool.wait_until(timePoint));
+    ASSERT_FALSE(pool.waitUntil(timePoint));
 
-    bool result = pool.wait_until(timePoint + std::chrono::milliseconds(2505));
+    bool result = pool.waitUntil(timePoint + std::chrono::milliseconds(2505));
     ASSERT_TRUE(result);
     ASSERT_EQ(pool.waitedCnt(), 0);
     ASSERT_EQ(pool.runningCnt(), 0);
 
-    std::string str = "wait_until";
+    std::string str = "waitUntil";
     auto fut = pool.submit(getStr, std::ref(str));
     ASSERT_EQ(fut.get(), str + "." + str);
 }
@@ -116,12 +115,12 @@ TEST(basic, pause) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     pool.pause(true); // Pause the thread pool
 
-    ASSERT_TRUE(pool.isPause()); // All tasks should be paused
+    ASSERT_TRUE(pool.isPaused()); // All tasks should be paused
     ASSERT_EQ(pool.waitedCnt(), 8); // All tasks should be in the queue
     ASSERT_EQ(pool.runningCnt(), 2); // 2 threads should be running tasks
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    ASSERT_TRUE(pool.isPause()); // All tasks should be paused
+    ASSERT_TRUE(pool.isPaused()); // All tasks should be paused
     ASSERT_EQ(pool.waitedCnt(), 8); // All tasks should be in the queue
     ASSERT_EQ(pool.runningCnt(), 0); // 2 threads should be running tasks
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
