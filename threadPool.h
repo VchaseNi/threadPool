@@ -27,7 +27,7 @@ private:
         // 优先级队列比较函数
         bool operator<(const Task &other) const
         {
-            return priority < other.priority; // 数值小的优先级高
+            return other.priority < priority; // 数值小的优先级高
         }
     };
 
