@@ -1,4 +1,3 @@
-// #include "Logger.h"
 #include "syncLogger.h"
 #include "threadPool.h"
 #include <gtest/gtest.h>

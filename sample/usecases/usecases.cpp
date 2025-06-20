@@ -1,6 +1,5 @@
 #include "syncLogger.h"
 #include "threadPool.h"
-// #include "Logger.h"
 
 bool normalFunc(std::string &str, int a) {
     vc::println(__func__, " ",str, " ", a);
