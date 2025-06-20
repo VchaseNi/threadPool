@@ -1,4 +1,4 @@
-#include "Logger.h"
+// #include "Logger.h"
 #include "syncLogger.h"
 #include "threadPool.h"
 #include <gtest/gtest.h>
@@ -8,7 +8,7 @@ uint32_t g_normalParamFuncCnt = 0;
 // 普通函数
 uint32_t print_hello()
 {
-    Logger::println("Normal Func Cnt: ", g_normalFuncCnt);
+    vc::println("Normal Func Cnt: ", g_normalFuncCnt);
     return ++g_normalFuncCnt;
 }
 
@@ -16,7 +16,7 @@ uint32_t print_hello()
 void print_message_param(std::string arg1, int arg2)
 {
     g_normalParamFuncCnt++;
-    Logger::println("Normal Func Cnt: ", g_normalParamFuncCnt, " arg1: ", arg1, " arg2: ", arg2);
+    vc::println("Normal Func Cnt: ", g_normalParamFuncCnt, " arg1: ", arg1, " arg2: ", arg2);
 }
 
 class MyClass {
@@ -24,13 +24,13 @@ public:
     void member_func(const std::string &msg)
     {
         memberFuncCnt++;
-        Logger::println("Member Func Cnt: ", memberFuncCnt, " msg: ", msg);
+        vc::println("Member Func Cnt: ", memberFuncCnt, " msg: ", msg);
     }
 
     static void static_func()
     {
         staticFuncCnt++;
-        Logger::println("Static Func Cnt: ", staticFuncCnt);
+        vc::println("Static Func Cnt: ", staticFuncCnt);
     }
 
 public:
@@ -52,15 +52,16 @@ TEST(callable, print_hello)
 TEST(callable, print_hello_submit)
 {
     ThreadPool pool(4);
-    
+
     g_normalFuncCnt = 0;
     ASSERT_EQ(pool.submit(print_hello).get(), 1);
 }
 
-TEST(callable, print_message_param) {
+TEST(callable, print_message_param)
+{
     ThreadPool pool(4);
     pool.submit(print_message_param, "Hello", 2);
-    pool.wait();        
+    pool.wait();
 }
 
 TEST(callable, memberFunc)
@@ -80,14 +81,10 @@ TEST(callable, lambda)
     ThreadPool pool(4);
     uint32_t lambdaCnt = 0;
     for (int i = 0; i < 10; ++i) {
-        pool.detach([&](){
-            lambdaCnt++;
-        });
+        pool.detach([&]() { lambdaCnt++; });
     }
     pool.wait();
     ASSERT_EQ(lambdaCnt, 10);
     std::string str("lambda");
-    pool.submit([](std::string &str){
-        Logger::println(str);
-            }, std::ref(str));
+    pool.submit([](std::string &str) { vc::println(str); }, std::ref(str));
 }

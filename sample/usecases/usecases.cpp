@@ -1,15 +1,15 @@
 #include "syncLogger.h"
 #include "threadPool.h"
-#include "Logger.h"
+// #include "Logger.h"
 
 bool normalFunc(std::string &str, int a) {
-    Logger::println(__func__, " ",str, " ", a);
+    vc::println(__func__, " ",str, " ", a);
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     return true;
 }
 
 void highFunc(bool value) {
-    Logger::println(__func__, std::boolalpha, value);
+    vc::println(__func__, std::boolalpha, value);
 }
 
 int main() {
@@ -23,10 +23,10 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
     pool.pause(true);
-    Logger::println("wait: ", pool.waitingTasks(), " running: ", pool.runningTasks());
+    vc::println("wait: ", pool.waitingTasks(), " running: ", pool.runningTasks());
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     // 这里可以看到，两个task一直在等待
-    Logger::println("wait: ", pool.waitingTasks(), " running: ", pool.runningTasks());
+    vc::println("wait: ", pool.waitingTasks(), " running: ", pool.runningTasks());
 
     pool.pause(false);
 
@@ -34,7 +34,7 @@ int main() {
     auto fut = pool.submit(0, highFunc, true);
     fut.wait();
 
-    Logger::println("wait: ", pool.waitingTasks(), " running: ", pool.runningTasks());
+    vc::println("wait: ", pool.waitingTasks(), " running: ", pool.runningTasks());
     pool.wait();
 
     return 0;
